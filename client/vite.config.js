@@ -7,7 +7,7 @@ export default defineConfig({
   server:{
     proxy:{
       '/api':{
-        target:'https://machine-task-1-main.onrender.com/',
+        target:'https://sales-report-oohs.onrender.com',
         secure:false
       }
     }

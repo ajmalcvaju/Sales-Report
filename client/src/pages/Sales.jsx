@@ -34,7 +34,7 @@ const Sales = () => {
   useEffect(() => {
     const fetchProducts = async () => {
       try {
-        const res = await axios.get("https://machine-task-1-main.onrender.com/api/products");
+        const res = await axios.get("https://sales-report-oohs.onrender.com/api/products");
         console.log(res.data);
         setItems(res.data);
       } catch (err) {
@@ -48,7 +48,7 @@ const Sales = () => {
   useEffect(() => {
     const fetchUsers = async () => {
       try {
-        const res = await axios.get("https://machine-task-1-main.onrender.com/api/customer");
+        const res = await axios.get("https://sales-report-oohs.onrender.com/api/customer");
         console.log(res.data);
         setUsers(res.data);
       } catch (err) {
@@ -62,7 +62,7 @@ const Sales = () => {
 
   const fetchSalesReport = async () => {
     try {
-      const res = await axios.get("https://machine-task-1-main.onrender.com/api/products/sales");
+      const res = await axios.get("https://sales-report-oohs.onrender.com/api/products/sales");
       console.log(res.data);
       setSalesReport(res.data);
     } catch (error) {
@@ -73,7 +73,7 @@ const Sales = () => {
 
   const fetchItemsReport = async () => {
     try {
-      const res = await axios.get("https://machine-task-1-main.onrender.com/api/products");
+      const res = await axios.get("https://sales-report-oohs.onrender.com/api/products");
       setItemsReport(res.data);
       setShowItemsReportModal(true);
     } catch (error) {
@@ -159,7 +159,7 @@ const Sales = () => {
       };
 
       const res = await axios.patch(
-        "https://machine-task-1-main.onrender.com/api/products/sale",
+        "https://sales-report-oohs.onrender.com/api/products/sale",
         saleData
       );
       const sale = res.data.sale;
