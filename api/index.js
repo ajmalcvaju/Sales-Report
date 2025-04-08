@@ -27,7 +27,7 @@ app.use(cors());
 app.use(
   cors({
     origin: "https://sales-gj5ge0sce-ajmalmayanads-projects.vercel.app/", // your frontend origin
-    methods: ["GET", "POST", "PUT", "DELETE"],
+    methods: ["GET", "POST", "PUT", "PATCH", "DELETE"],
     credentials: true,
   })
 );
