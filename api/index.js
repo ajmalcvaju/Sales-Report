@@ -24,13 +24,14 @@ app.use(express.json());
 app.use(cookieParser());
 app.use(cors());
 
-app.use(
-  cors({
-    origin: "https://sales-gj5ge0sce-ajmalmayanads-projects.vercel.app/", // your frontend origin
-    methods: ["GET", "POST", "PUT", "PATCH", "DELETE"],
-    credentials: true,
-  })
-);
+app.use(cors({
+  origin: [
+    'https://sales-ba3hylg7q-ajmalmayanads-projects.vercel.app',
+    'https://sales-gj5ge0sce-ajmalmayanads-projects.vercel.app' 
+  ],
+  credentials: true,
+}));
+
 
 app.listen(3000, () => {
   console.log("server listen on port 3000");
