@@ -8,7 +8,7 @@ import cookieParser from "cookie-parser";
 import cors from "cors";
 dotenv.config();
 
-const MONGO = "mongodb+srv://ajmalmayanad:Ajmal12@@mern.yfblm.mongodb.net/?retryWrites=true&w=majority&appName=MERN";
+const MONGO = MONGO="mongodb+srv://ajmalmayanad:Ajmal12%40@mern.yfblm.mongodb.net/?retryWrites=true&w=majority&appName=MERN";
 
 mongoose
   .connect(MONGO)
