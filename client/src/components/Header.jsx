@@ -19,7 +19,7 @@ const Header = () => {
   
   const handleLogout=()=>{
     localStorage.removeItem("userEmail");
-    navigate("/")
+    navigate("/sign-in");
   }
 
   return (
