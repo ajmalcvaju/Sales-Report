@@ -26,7 +26,7 @@ app.use(cors());
 
 app.use(cors({
   origin: [
-    'https://sales-osboj8qt9-ajmalmayanads-projects.vercel.app'
+    'https://sales-bjgw24yqv-ajmalmayanads-projects.vercel.app'
   ],
   credentials: true,
 }));
