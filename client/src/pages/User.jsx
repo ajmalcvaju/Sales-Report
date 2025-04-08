@@ -27,7 +27,7 @@ const User = () => {
   useEffect(() => {
     const fetchUsers = async () => {
       try {
-        const res = await axios.get("http://localhost:3000/api/customer");
+        const res = await axios.get("https://machine-task-1-main.onrender.com/api/customer");
         setUsers(res.data);
       } catch (err) {
         console.error("Failed to fetch users:", err);
@@ -48,7 +48,7 @@ const User = () => {
     try {
       if (isEditMode) {
         const res = await axios.post(
-          `http://localhost:3000/api/customer/update/${editUserId}`,
+          `https://machine-task-1-main.onrender.com/api/customer/update/${editUserId}`,
           formData
         );
         const updatedUser = res.data;
@@ -57,7 +57,7 @@ const User = () => {
         );
       } else {
         const res = await axios.post(
-          "http://localhost:3000/api/customer/create",
+          "https://machine-task-1-main.onrender.com/api/customer/create",
           formData
         );
         setUsers((prev) => [...prev, res.data]);
@@ -75,7 +75,7 @@ const User = () => {
 
   const handleDelete = async (id) => {
     try {
-      await axios.delete(`http://localhost:3000/api/customer/delete/${id}`);
+      await axios.delete(`https://machine-task-1-main.onrender.com/api/customer/delete/${id}`);
       setUsers((prev) => prev.filter((user) => user._id !== id));
     } catch (err) {
       console.error("Failed to delete user", err);

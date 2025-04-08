@@ -38,7 +38,7 @@ export default function Home() {
   useEffect(() => {
     const fetchProducts = async () => {
       try {
-        const res = await axios.get("http://localhost:3000/api/products");
+        const res = await axios.get("https://machine-task-1-main.onrender.com/api/products");
         setProducts(res.data);
       } catch (err) {
         console.error("Failed to fetch products:", err);
@@ -61,7 +61,7 @@ export default function Home() {
       if (isEditMode) {
         console.log(editProductId);
         const res = await axios.post(
-          `http://localhost:3000/api/products/update/${editProductId}`,
+          `https://machine-task-1-main.onrender.com/api/products/update/${editProductId}`,
           formData
         );
         const updatedProduct = res.data;
@@ -73,7 +73,7 @@ export default function Home() {
         );
       } else {
         const res = await axios.post(
-          "http://localhost:3000/api/products/create",
+          "https://machine-task-1-main.onrender.com/api/products/create",
           formData
         );
         setProducts([...products, formData]);
@@ -94,7 +94,7 @@ export default function Home() {
 
   const handleDelete = async (id) => {
     try {
-      await axios.delete(`http://localhost:3000/api/products/delete/${id}`);
+      await axios.delete(`https://machine-task-1-main.onrender.com/api/products/delete/${id}`);
       setProducts((prev) => prev.filter((item) => item._id !== id));
     } catch (err) {
       console.error("Delete failed", err);
