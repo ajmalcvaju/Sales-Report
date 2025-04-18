@@ -1,12 +1,23 @@
-import express from 'express'
-import { createCustomer, getCustomers, updateCustomer, deleteCustomer} from '../controllers/customerController.js';
-import { verifyToken } from '../utils/verifyUser.js';
+import express from 'express';
+import {
+  createCustomer,
+  getCustomers,
+  updateCustomer,
+  deleteCustomer
+} from '../controllers/customerController.js';
 
-const router=express.Router()
+const router = express.Router();
 
-router.post("/create",createCustomer)
-router.get("/",getCustomers)
-router.post("/update/:id",updateCustomer)
-router.delete("/delete/:id",deleteCustomer)
+router.route('/')
+  .get(getCustomers);
+
+router.route('/create-customer')
+  .post(createCustomer);
+
+router.route('/update-customer/:id')
+  .patch(updateCustomer);
+
+router.route('/delete-customer/:id')
+  .delete(deleteCustomer);
 
 export default router;

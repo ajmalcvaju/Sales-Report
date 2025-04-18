@@ -1,6 +1,6 @@
 import mongoose from "mongoose";
 
-const saleItemSchema = new mongoose.Schema({
+const purchaseItemSchema = new mongoose.Schema({
   productId: {
     type: mongoose.Schema.Types.ObjectId,
     ref: "Product",
@@ -21,7 +21,7 @@ const saleItemSchema = new mongoose.Schema({
   },
 });
 
-const saleSchema = new mongoose.Schema({
+const purchaseSchema = new mongoose.Schema({
   userId: {
     type: mongoose.Schema.Types.ObjectId,
     ref: "User",
@@ -33,16 +33,16 @@ const saleSchema = new mongoose.Schema({
     trim: true,
   },
   date: {
-    type: String, // or use `Date` if you want to store it as a native Date
+    type: String,
     required: true,
   },
   items: {
-    type: [saleItemSchema],
+    type: [purchaseItemSchema],
     required: true,
     validate: (v) => Array.isArray(v) && v.length > 0,
   },
 });
 
-const Sale = mongoose.model("Sale", saleSchema);
+const Purchase = mongoose.model("Purchase", purchaseSchema);
 
-export default Sale;
+export default Purchase;

@@ -27,7 +27,7 @@ const User = () => {
   useEffect(() => {
     const fetchUsers = async () => {
       try {
-        const res = await axios.get("https://sales-report-oohs.onrender.com/api/customer");
+        const res = await axios.get("http://localhost:3000/api/customer");
         setUsers(res.data);
       } catch (err) {
         console.error("Failed to fetch users:", err);
@@ -48,19 +48,21 @@ const User = () => {
     try {
       if (isEditMode) {
         const res = await axios.post(
-          `https://sales-report-oohs.onrender.com/api/customer/update/${editUserId}`,
+          `http://localhost:3000/api/customer/update-customer/${editUserId}`,
           formData
         );
         const updatedUser = res.data;
         setUsers((prev) =>
           prev.map((u) => (u._id === editUserId ? updatedUser : u))
         );
+        window.location.reload();
       } else {
         const res = await axios.post(
-          "https://sales-report-oohs.onrender.com/api/customer/create",
+          "http://localhost:3000/api/customer/create-customer",
           formData
         );
         setUsers((prev) => [...prev, res.data]);
+        window.location.reload();
       }
 
       // Reset
@@ -75,8 +77,9 @@ const User = () => {
 
   const handleDelete = async (id) => {
     try {
-      await axios.delete(`https://sales-report-oohs.onrender.com/api/customer/delete/${id}`);
+      await axios.delete(`http://localhost:3000/api/customer/delete-customer/${id}`);
       setUsers((prev) => prev.filter((user) => user._id !== id));
+      window.location.reload();
     } catch (err) {
       console.error("Failed to delete user", err);
     }

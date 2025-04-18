@@ -6,12 +6,14 @@ import productRoutes from "./routes/productRoute.js";
 import customerRoutes from "./routes/customerRoutes.js";
 import cookieParser from "cookie-parser";
 import cors from "cors";
+import errorMiddleware from "./middlewares/errorMiddleware.js";
 dotenv.config();
 
-const MONGO ="mongodb+srv://ajmalmayanad:Ajmal12%40@mern.yfblm.mongodb.net/?retryWrites=true&w=majority&appName=MERN";
+const mongo=process.env.MONGO;
+
 
 mongoose
-  .connect(MONGO)
+  .connect(mongo)
   .then(() => {
     console.log("Connected to MongoDB");
   })
@@ -26,26 +28,19 @@ app.use(cors());
 
 app.use(cors({
   origin: [
-    'https://sales-bjgw24yqv-ajmalmayanads-projects.vercel.app'
+    'http://localhost:5173'
   ],
   credentials: true,
 }));
 
+app.use("/api/products", productRoutes);
+app.use("/api/customer", customerRoutes);
+app.use("/api/auth", authRoutes);
+app.use(errorMiddleware);
 
 app.listen(3000, () => {
   console.log("server listen on port 3000");
 });
 
-app.use("/api/products", productRoutes);
-app.use("/api/customer", customerRoutes);
-app.use("/api/auth", authRoutes);
 
-app.use((err, req, res, next) => {
-  const statusCode = err.statusCode || 500;
-  const message = err.message || "Internal Server Error";
-  return res.status(statusCode).json({
-    success: false,
-    message,
-    statusCode,
-  });
-});
+

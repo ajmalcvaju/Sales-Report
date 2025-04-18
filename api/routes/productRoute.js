@@ -1,14 +1,42 @@
-import express from 'express'
-import { createProduct, getProduct, updateProduct, deleteProduct, saleProduct, getSales} from '../controllers/productController.js';
-import { verifyToken } from '../utils/verifyUser.js';
+import express from 'express';
+import {
+  purchaseProduct,
+  createProduct,
+  getProduct,
+  updateProduct,
+  deleteProduct,
+  saleProduct,
+  getSales,
+  getPurchase,
+  sendSalesReport
+} from '../controllers/productController.js';
+import { uploads } from '../middlewares/email.js';
 
-const router=express.Router()
+const router = express.Router();
 
-router.post("/create",createProduct)
-router.get("/",getProduct)
-router.get("/sales",getSales)
-router.post("/update/:id",updateProduct)
-router.delete("/delete/:id",deleteProduct)
-router.patch("/sale",saleProduct)
+router.route('/')
+  .get(getProduct);
+
+router.route('/create-product')
+  .post(createProduct);
+
+router.route('/sales')
+  .get(getSales);
+
+router.route('/purchase')
+  .get(getPurchase)
+  .patch(purchaseProduct);
+
+router.route('/sale')
+  .patch(saleProduct);
+
+router.route('/update-product/:id')
+  .patch(updateProduct);
+
+router.route('/delete-product/:id')
+  .delete(deleteProduct);
+
+router.route('/send-report')
+  .post(uploads,sendSalesReport);
 
 export default router;
