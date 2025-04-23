@@ -2,6 +2,7 @@ import React, { useEffect, useState } from "react";
 import { Pencil, Trash2, PlusCircle, Search } from "lucide-react";
 import axios from "axios";
 import Header from "../components/Header";
+import { createCustomer, deleteCustomer, fetchCustomers, updateCustomer } from "../api/api";
 
 const defaultUser = {
   name: "",
@@ -27,8 +28,9 @@ const User = () => {
   useEffect(() => {
     const fetchUsers = async () => {
       try {
-        const res = await axios.get("http://localhost:3000/api/customer");
-        setUsers(res.data);
+        const data = await fetchCustomers();
+        console.log(data)
+      setUsers(data);
       } catch (err) {
         console.error("Failed to fetch users:", err);
       }
@@ -47,21 +49,14 @@ const User = () => {
     e.preventDefault();
     try {
       if (isEditMode) {
-        const res = await axios.post(
-          `http://localhost:3000/api/customer/update-customer/${editUserId}`,
-          formData
-        );
-        const updatedUser = res.data;
+        const updatedUser = await updateCustomer(editUserId, formData);
         setUsers((prev) =>
           prev.map((u) => (u._id === editUserId ? updatedUser : u))
         );
         window.location.reload();
       } else {
-        const res = await axios.post(
-          "http://localhost:3000/api/customer/create-customer",
-          formData
-        );
-        setUsers((prev) => [...prev, res.data]);
+        const newCustomer = await createCustomer(formData);
+        setUsers((prev) => [...prev, newCustomer]);
         window.location.reload();
       }
 
@@ -77,7 +72,7 @@ const User = () => {
 
   const handleDelete = async (id) => {
     try {
-      await axios.delete(`http://localhost:3000/api/customer/delete-customer/${id}`);
+      const deletedCustomer = await deleteCustomer(id);
       setUsers((prev) => prev.filter((user) => user._id !== id));
       window.location.reload();
     } catch (err) {

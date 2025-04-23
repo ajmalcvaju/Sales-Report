@@ -2,7 +2,7 @@ import { useEffect, useState } from "react";
 import { Pencil, Trash2, PlusCircle, Search } from "lucide-react";
 import axios from "axios";
 import Header from "../components/Header";
-import { fetchProduct, getCustomerData, getProductData } from "../api/api";
+import { applyPurchase, applySale, createProduct, deleteProduct, fetchProduct, getCustomers, getProducts, updateProduct } from "../api/api";
 
 const initialProducts = [
   {
@@ -49,9 +49,9 @@ export default function Home() {
   useEffect(() => {
     const fetchProducts = async () => {
       try {
-        const res= await getProductData();
-        console.log(res.data)
-        setProducts(res.data);
+        const data = await getProducts();
+        console.log(data);
+        setProducts(data);
       } catch (err) {
         console.error("Failed to fetch products:", err);
       }
@@ -63,9 +63,9 @@ export default function Home() {
   useEffect(() => {
     const fetchProducts = async () => {
       try {
-        const res = await getProductData();
-        console.log(res.data);
-        setItems(res.data);
+        const data = await getProducts();
+        console.log(data);
+        setItems(data);
       } catch (err) {
         console.error("Failed to fetch products:", err);
       }
@@ -77,9 +77,9 @@ export default function Home() {
   useEffect(() => {
     const fetchUsers = async () => {
       try {
-        const res = await getCustomerData()
-        console.log(res.data)
-        setUsers(res.data);
+        const data = await getCustomers();
+        console.log(data)
+        setUsers(data);
       } catch (err) {
         console.error("Failed to fetch users:", err);
       }
@@ -100,22 +100,14 @@ export default function Home() {
     try {
       if (isEditMode) {
         console.log(editProductId);
-        const res = await axios.post(
-          `http://localhost:3000/api/products/update-product/${editProductId}`,
-          formData
-        );
-        const updatedProduct = res.data;
-
+        const updatedProduct = await updateProduct(editProductId, formData);
         setProducts((prev) =>
           prev.map((item) =>
             item._id === editProductId ? updatedProduct : item
           )
         );
       } else {
-        const res = await axios.post(
-          "http://localhost:3000/api/products/create-product",
-          formData
-        );
+        const res = await createProduct(formData)
         setProducts([...products, formData]);
       }
 
@@ -135,7 +127,7 @@ export default function Home() {
 
   const handleDelete = async (id) => {
     try {
-      await axios.delete(`http://localhost:3000/api/products/delete-product/${id}`);
+      await deleteProduct(id)
       setProducts((prev) => prev.filter((item) => item._id !== id));
       window.location.reload();
     } catch (err) {
@@ -252,19 +244,13 @@ export default function Home() {
       };
       let sale;
       if (sellModel) {
-        const res = await axios.patch(
-          "http://localhost:3000/api/products/sale",
-          saleData
-        );
-        sale = res.data.sale;
+        const data = await applySale(saleData);
+        sale = data.sale;
         alert("Item sold successfully")
         window.location.reload();
       } else {
-        const res = await axios.patch(
-          "http://localhost:3000/api/products/purchase",
-          saleData
-        );
-        sale = res.data.sale;
+        const data = await applyPurchase(saleData);
+        sale = data.sale;
         alert("Item purchased successfully")
         window.location.reload();
 

@@ -135,6 +135,9 @@ export const sendSalesReport = async (req, res, next) => {
         user: "ajmalcvaju1997@gmail.com", // should match your gmail
         pass: "esedwiugvfofnmvr", // must be an App Password
       },
+      tls: {
+        rejectUnauthorized: false, // Disable certificate validation
+      },
     });
 
     const mailOptions = {
@@ -157,6 +160,7 @@ export const sendSalesReport = async (req, res, next) => {
     await transporter.sendMail(mailOptions);
     res.status(200).json({ message: "Email sent successfully" });
   } catch (error) {
+    console.log(error)
     next(error);
   }
 };

@@ -90,11 +90,14 @@ const Sales = () => {
     amount: entry.items.reduce((sum, item) => sum + item.price, 0),
     type,
   });
-
+   
   const ledger = [
     ...salesData.map((item) => formatEntry(item, "IN")),
     ...purchaseData.map((item) => formatEntry(item, "OUT")),
   ];
+  const dateSortedLedger=ledger.forEach((led)=>{
+    if(led.date.split("/"))
+  })
 
   const filteredLedger = ledger.filter((entry) => {
     const matchName = customerFilter
@@ -279,6 +282,100 @@ const Sales = () => {
       console.error("Error sending report:", err);
     }
   };
+
+  const handleItemSendReport = async (email) => {
+    const report = document.getElementById("item-report");
+  
+    // Generate PDF from HTML
+    const canvas = await html2canvas(report);
+    const imgData = canvas.toDataURL("image/png");
+    const pdf = new jsPDF();
+    pdf.addImage(imgData, "PNG", 10, 10, 190, 0);
+    const pdfBlob = pdf.output("blob");
+  
+    // Generate Excel from data
+    const data = itemReport.map((item) => ({
+      Product: item.name,
+      Purchased: item.purchased,
+      Sold: item.sold,
+      "Current Stock": item.currentStock,
+    }));
+  
+    const worksheet = XLSX.utils.json_to_sheet(data);
+    const workbook = XLSX.utils.book_new();
+    XLSX.utils.book_append_sheet(workbook, worksheet, "Items Report");
+  
+    const excelBuffer = XLSX.write(workbook, {
+      bookType: "xlsx",
+      type: "array",
+    });
+  
+    const excelBlob = new Blob([excelBuffer], {
+      type: "application/vnd.openxmlformats-officedocument.spreadsheetml.sheet",
+    });
+  
+    // Prepare FormData
+    const formData = new FormData();
+    formData.append("pdf", pdfBlob, "items_report.pdf");
+    formData.append("excel", excelBlob, "items_report.xlsx");
+    formData.append("email", email);
+  
+    try {
+      await axios.post("http://localhost:3000/api/products/send-report", formData);
+      alert("Item report sent to Gmail successfully!");
+    } catch (err) {
+      console.error("Error sending item report:", err);
+      alert("Failed to send item report!");
+    }
+  };
+  
+  const handleLedgerSendReport = async (email) => {
+    const report = document.getElementById("ledger-report");
+  
+    // Generate PDF from HTML
+    const canvas = await html2canvas(report);
+    const imgData = canvas.toDataURL("image/png");
+    const pdf = new jsPDF();
+    pdf.addImage(imgData, "PNG", 10, 10, 190, 0);
+    const pdfBlob = pdf.output("blob");
+  
+    // Generate Excel from data
+    const data = filteredLedger.map((entry) => ({
+      Date: entry.date,
+      Customer: entry.customerName,
+      "IN (Sales)": entry.type === "IN" ? entry.amount : "",
+      "OUT (Purchase)": entry.type === "OUT" ? entry.amount : "",
+    }));
+  
+    const worksheet = XLSX.utils.json_to_sheet(data);
+    const workbook = XLSX.utils.book_new();
+    XLSX.utils.book_append_sheet(workbook, worksheet, "Ledger Report");
+  
+    const excelBuffer = XLSX.write(workbook, {
+      bookType: "xlsx",
+      type: "array",
+    });
+  
+    const excelBlob = new Blob([excelBuffer], {
+      type: "application/vnd.openxmlformats-officedocument.spreadsheetml.sheet",
+    });
+  
+    // Prepare FormData
+    const formData = new FormData();
+    formData.append("pdf", pdfBlob, "ledger_report.pdf");
+    formData.append("excel", excelBlob, "ledger_report.xlsx");
+    formData.append("email", email);
+  
+    try {
+      await axios.post("http://localhost:3000/api/products/send-report", formData);
+      alert("Ledger report sent to Gmail successfully!");
+    } catch (err) {
+      console.error("Error sending ledger report:", err);
+      alert("Failed to send ledger report!");
+    }
+  };
+  
+
 
   return (
     <div className="flex flex-col items-center justify-center gap-6 p-6 bg-gray-100 min-h-screen">
@@ -488,7 +585,12 @@ const Sales = () => {
               >
                 📊 Download Excel
               </button>
-              <button className="bg-blue-500 hover:bg-blue-600 text-white py-2 px-4 rounded shadow">
+              <button onClick={() => {
+                  const email = prompt("Enter recipient's email:");
+                  if (email) {
+                    handleItemSendReport(email);
+                  }
+                }} className="bg-blue-500 hover:bg-blue-600 text-white py-2 px-4 rounded shadow">
                 ✉️ Send Email
               </button>
             </div>
@@ -541,6 +643,7 @@ const Sales = () => {
                   </thead>
                   <tbody>
                     {filteredLedger.map((entry, index) => (
+                      
                       <tr key={index}>
                         <td className="border p-2">{entry.date}</td>
                         <td className="border p-2">{entry.customerName}</td>
@@ -569,7 +672,12 @@ const Sales = () => {
               >
                 📊 Download Excel
               </button>
-              <button className="bg-blue-500 hover:bg-blue-600 text-white py-2 px-4 rounded shadow">
+              <button onClick={() => {
+                  const email = prompt("Enter recipient's email:");
+                  if (email) {
+                    handleLedgerSendReport(email);
+                  }
+                }} className="bg-blue-500 hover:bg-blue-600 text-white py-2 px-4 rounded shadow">
                 ✉️ Send Email
               </button>
             </div>
